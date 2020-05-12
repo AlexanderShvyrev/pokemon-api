@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect, Fragment } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+
+  const [pokemons, setPokemons] = useState([]);
+  const [isClicked, setState] = useState(false);
+
+  useEffect(() => {
+    if (isClicked) {
+
+      axios.get("https://pokeapi.co/api/v2/pokemon?limit=964")
+        .then(response => { setPokemons(response.data.results) })
+
+    }
+  }, [isClicked])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <div className="jumbotron">
+        <button className="btn btn-lg btn-dark" onClick={(e) => setState(true)}>Fetch Pokemon</button>
+      </div>
+      <ul className="list-group">
+        {pokemons.length > 0 && pokemons.map((pokemon, i) => {
+          return (<li key={i} className="list-group-item">{pokemon.name}</li>)
+        })}
+      </ul>
+    </Fragment>
   );
+
 }
 
 export default App;
